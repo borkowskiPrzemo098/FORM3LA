@@ -39,7 +39,7 @@ Najważniejsze wymaganie projektu. Zabezpieczenia są warstwowe — awaria jedne
 - `audit_log` z pełnym stanem „przed/po” każdej zmiany,
 - `config_history` — każda wersja grafiku/usług do przywrócenia,
 - klient anonimowy nie widzi danych innych klientów (RLS + funkcje RPC),
-- **nocna zaszyfrowana kopia** do gałęzi `backups` (GitHub Action `.github/workflows/backup.yml`).
+- **nocna zaszyfrowana kopia** do gałęzi `backups` (gotowy plik `supabase/backup-workflow.yml` — przy podłączaniu Supabase przenieś go do `.github/workflows/`).
 
 > ⚠️ Tryb demo trzyma dane w jednej przeglądarce. Do prawdziwej pracy z klientami podłącz Supabase (niżej). Do tego czasu regularnie pobieraj kopię (Więcej → Pobierz kopię) i dodaj panel do ekranu początkowego iPhone'a (Safari → Udostępnij → Do ekranu początkowego) — wtedy iOS nie czyści jego danych.
 
@@ -53,7 +53,7 @@ Najważniejsze wymaganie projektu. Zabezpieczenia są warstwowe — awaria jedne
    insert into public.admins(user_id) select id from auth.users where email = 'twoj@email.pl';
    ```
 5. **Project Settings → API** → skopiuj `Project URL` i klucz `anon public` do `js/config.js`.
-6. (Kopia nocna) GitHub → repozytorium → **Settings → Secrets → Actions**: `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (klucz `service_role`), `BACKUP_PASSPHRASE` (długie hasło — zapisz w menedżerze haseł).
+6. (Kopia nocna) Przenieś `supabase/backup-workflow.yml` do `.github/workflows/backup.yml` i wypchnij (wymaga `gh auth refresh -s workflow`). Potem GitHub → repozytorium → **Settings → Secrets → Actions**: `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` (klucz `service_role`), `BACKUP_PASSPHRASE` (długie hasło — zapisz w menedżerze haseł).
 
 ## Pliki
 
@@ -65,7 +65,7 @@ js/store-demo.js           magazyn demo z zabezpieczeniami
 js/store-supabase.js       magazyn produkcyjny
 js/ics.js                  plik kalendarza .ics + link Google Calendar
 supabase/schema.sql        baza, reguły bezpieczeństwa, funkcje
-.github/workflows/backup.yml  nocna zaszyfrowana kopia
+supabase/backup-workflow.yml  nocna zaszyfrowana kopia (GitHub Action)
 ```
 
 Uruchomienie lokalne: dowolny serwer statyczny w tym folderze (np. `npx serve`).
