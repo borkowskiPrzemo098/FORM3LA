@@ -64,7 +64,8 @@
     --blue: #5eaaff;
     --bar: rgba(22, 22, 24, 0.8);
     --scrim: rgba(0, 0, 0, 0.55);
-    --island: #000000;
+    --island: #2c2c2e;
+    --island-edge: rgba(255, 255, 255, 0.12);
     --shadow-1: none;
     --shadow-sheet: 0 -6px 30px rgba(0, 0, 0, 0.5);
     --pass: #13644f;
@@ -117,7 +118,10 @@ body.sheet-open .app {
   border-radius: 12px;
   filter: brightness(0.92);
 }
-@media (prefers-color-scheme: dark) { body.sheet-open .app { filter: brightness(0.6); } }
+@media (prefers-color-scheme: dark) {
+  body.sheet-open .app { filter: brightness(0.6); }
+  .sheet { --bg: #1c1c1e; --bg-elev: #2c2c2e; --fill: rgba(118, 118, 128, 0.3); }
+}
 
 /* ---------- Widoki i stos ---------- */
 .stack { position: absolute; inset: 0; }
@@ -519,7 +523,7 @@ input[type="time"]::-webkit-date-and-time-value, input[type="date"]::-webkit-dat
 .island {
   position: fixed;
   z-index: 100;
-  top: calc(var(--safe-t) + 10px);
+  bottom: calc(var(--safe-b) + 18px);
   left: 0; right: 0;
   margin: 0 auto;
   width: fit-content;
@@ -532,8 +536,9 @@ input[type="time"]::-webkit-date-and-time-value, input[type="date"]::-webkit-dat
   border-radius: 28px;
   background: var(--island);
   color: #fff;
+  border: 0.5px solid var(--island-edge, transparent);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  transform: translateY(-140%) scale(0.6);
+  transform: translateY(140%) scale(0.6);
   opacity: 0;
   transition: transform 0.55s var(--spring), opacity 0.3s;
   pointer-events: none;
@@ -692,7 +697,7 @@ input[type="time"]::-webkit-date-and-time-value, input[type="date"]::-webkit-dat
 .pass-code { text-align: right; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pass-dim); }
 .pass-code strong { display: block; font-size: 17px; letter-spacing: 0.12em; color: var(--pass-ink); font-variant-numeric: tabular-nums; }
 .pass-when { margin: 22px 0 4px; }
-.pass-when small { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pass-dim); }
+.pass-when small { display: block; font-size: 15px; font-weight: 500; color: var(--pass-dim); margin-top: 2px; }
 .pass-when strong { display: block; font-family: var(--font-display); font-size: 44px; line-height: 48px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .pass-when span { font-size: 17px; font-weight: 500; }
 .pass-tear { position: relative; height: 0; border-top: 1.5px dashed rgba(255, 255, 255, 0.28); margin: 18px -20px 16px; }
@@ -708,18 +713,8 @@ input[type="time"]::-webkit-date-and-time-value, input[type="date"]::-webkit-dat
 .pass-grid div { font-size: 16px; font-weight: 600; min-width: 0; }
 .pass-grid .r { text-align: right; }
 .pass.cancelled { background: #6c6c70; box-shadow: none; }
-.pass-stamp {
-  position: absolute; right: 16px; top: 64px;
-  transform: rotate(-8deg);
-  border: 2px solid currentColor;
-  border-radius: 8px;
-  padding: 3px 10px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  font-size: 15px;
-  text-transform: uppercase;
-  opacity: 0.85;
-}
+.pass-status { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 4px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.16); font-size: 13px; font-weight: 600; }
+.pass.cancelled .pass-when strong { text-decoration: line-through; text-decoration-thickness: 2px; }
 .pass-in { animation: passIn 0.9s var(--spring) both; }
 @keyframes passIn {
   0% { transform: translateY(40px) rotateX(18deg) scale(0.92); opacity: 0; }
@@ -793,7 +788,7 @@ input[type="time"]::-webkit-date-and-time-value, input[type="date"]::-webkit-dat
 .tl-slot { position: absolute; left: 52px; right: 0; height: calc(var(--hour) / 2); }
 .tl-slot:active { background: var(--tint-soft); border-radius: 6px; }
 .tl-closed { position: absolute; left: 52px; right: 0; background: repeating-linear-gradient(-45deg, var(--fill) 0 2px, transparent 2px 9px); border-radius: 6px; pointer-events: none; }
-.tl-break { position: absolute; left: 52px; right: 0; background: var(--fill); border-radius: 6px; font-size: 12px; color: var(--label-3); padding: 2px 8px; pointer-events: none; }
+.tl-break { position: absolute; left: 52px; right: 0; background: var(--fill); border-radius: 6px; font-size: 12px; color: var(--label-3); padding: 2px 8px; pointer-events: none; text-align: right; }
 .tl-ev {
   position: absolute;
   left: 56px; right: 2px;

@@ -283,6 +283,7 @@ export const confirmAction = (opts) =>
 let islandTimer;
 export function island({ text, sub = '', iconName = 'checkCircle', tone = 'ok', action = null, ms = 3200 }) {
   const el = $('#island');
+  el.style.bottom = document.querySelector('.tabbar:not([hidden])') && !document.body.classList.contains('sheet-open') ? 'calc(var(--safe-b) + 84px)' : '';
   clearTimeout(islandTimer);
   el.className = `island tone-${tone}`;
   el.innerHTML = html`<span class="island-ic">${raw(icon(iconName))}</span><span class="island-txt"><strong>${text}</strong>${sub ? raw(`<small>${html`${sub}`}</small>`) : ''}</span>${action ? raw(`<button class="island-act">${html`${action.label}`}</button>`) : ''}`;

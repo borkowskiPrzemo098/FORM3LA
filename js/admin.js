@@ -191,7 +191,7 @@ function calendarView() {
     const sc = v.querySelector('.scroll');
     if (!target) return;
     const y = target.offsetTop + v.querySelector('.timeline').offsetTop;
-    if (y > sc.clientHeight - 160) sc.scrollTo({ top: y - sc.clientHeight / 2 });
+    if (y > sc.clientHeight * 0.4) sc.scrollTo({ top: y - sc.clientHeight * 0.25 });
   });
   return v;
 }
@@ -561,7 +561,7 @@ function moreView() {
 
       <h2 class="group-label">Salon</h2>
       <div class="group">
-        <button class="row has-icon" data-go="services"><span class="row-icon">${raw(icon('scissors'))}</span><div class="row-main"><div class="row-title">Usługi i ceny</div></div><span class="row-val">${D.services.filter((s) => s.active).length}</span>${raw(icon('chevronR', 'row-chev'))}</button>
+        <button class="row has-icon" data-go="services"><span class="row-icon orange">${raw(icon('scissors'))}</span><div class="row-main"><div class="row-title">Usługi i ceny</div></div><span class="row-val">${D.services.filter((s) => s.active).length}</span>${raw(icon('chevronR', 'row-chev'))}</button>
         <button class="row has-icon" data-go="salon"><span class="row-icon indigo">${raw(icon('store'))}</span><div class="row-main"><div class="row-title">Dane salonu</div></div>${raw(icon('chevronR', 'row-chev'))}</button>
         <button class="row has-icon" data-go="share"><span class="row-icon blue">${raw(icon('share'))}</span><div class="row-main"><div class="row-title">Link do rezerwacji</div><div class="row-sub" style="font-size:13px">Wklej na Instagram, Google, do SMS</div></div>${raw(icon('chevronR', 'row-chev'))}</button>
       </div>

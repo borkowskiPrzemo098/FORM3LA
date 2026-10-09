@@ -231,6 +231,7 @@ function confirmSheet(service, day, start, onCancel) {
       <div class="row field"><label for="f-note">Uwagi</label><textarea id="f-note" name="note" rows="2" placeholder="Opcjonalnie" maxlength="300"></textarea></div>
     </div>
     <p class="field-error" data-err hidden></p>
+    ${MODE === 'demo' ? raw(html`<div class="demo-flag">${raw(icon('exclaim'))}<span><b>Wersja pokazowa.</b> Rezerwacja zapisze się tylko na tym telefonie — barber jej nie otrzyma.</span></div>`) : ''}
     <p class="fine">Odwołasz lub przełożysz wizytę sam do ${cfg.settings.cancelHours} h przed terminem. Numer telefonu służy tylko do kontaktu w sprawie wizyty.</p>
     <button class="btn" type="submit">Zarezerwuj · ${fmtPrice(service.price)}</button>
   </form>`);
@@ -289,12 +290,11 @@ function confirmReschedule(b, day, start, onCancel) {
 
 // ---------------------------------------------------------------- Karnet
 function passMarkup(b, anim) {
-  const stamp = b.status === 'cancelled' ? 'Odwołana' : b.status === 'done' ? 'Zakończona' : b.status === 'noshow' ? 'Nieobecność' : '';
+  const stamp = b.status === 'cancelled' ? 'Wizyta odwołana' : b.status === 'done' ? 'Wizyta zakończona' : b.status === 'noshow' ? 'Nieobecność' : '';
   const word = esc(cfg.salon.name).replace(/3/, '<b>3</b>');
   return html`<article class="pass ${b.status === 'cancelled' ? 'cancelled' : ''} ${anim ? 'pass-in' : ''}" aria-label="Karnet wizyty">
     <div class="pass-top"><span class="wordmark">${raw(word)}</span><div class="pass-code">Kod<strong>${b.code}</strong></div></div>
-    ${stamp ? raw(html`<span class="pass-stamp">${stamp}</span>`) : ''}
-    <div class="pass-when"><small>${fmtDayLong(b.day)}</small><strong>${fmtMin(b.start)}</strong><span class="num">do ${fmtMin(b.end)}</span></div>
+    <div class="pass-when"><strong>${fmtMin(b.start)}</strong><small class="num">${fmtDayLong(b.day).replace(/^./, (m) => m.toUpperCase())} · do ${fmtMin(b.end)}</small>${stamp ? raw(html`<span class="pass-status">${stamp}</span>`) : ''}</div>
     <div class="pass-tear"></div>
     <div class="pass-grid">
       <div><small>Usługa</small>${b.serviceName}</div><div class="r"><small>Cena</small><span class="num">${fmtPrice(b.price)}</span></div>
@@ -331,7 +331,7 @@ function doneView(b, rescheduled = false) {
   c.innerHTML = html`
     <div class="done-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="29"/><path d="M20 33l8 8 17-17"/></svg></div>
     <h1 class="done-title">${rescheduled ? 'Nowy termin zapisany' : 'Do zobaczenia!'}</h1>
-    <p class="done-sub">${rescheduled ? 'Zaktualizuj wizytę w kalendarzu.' : 'Wizyta potwierdzona. Dodaj ją do kalendarza, żeby nie zapomnieć.'}</p>
+    <p class="done-sub">${MODE === 'demo' ? 'Wersja pokazowa: wizyta zapisana tylko na tym urządzeniu, barber jej nie widzi.' : rescheduled ? 'Zaktualizuj wizytę w kalendarzu.' : 'Wizyta potwierdzona. Dodaj ją do kalendarza, żeby nie zapomnieć.'}</p>
     ${raw(passMarkup(b, true))}
     <div class="btn-stack" style="margin-top:20px">
       <button class="btn" data-cal>${raw(icon('calPlus'))}Dodaj do kalendarza</button>
