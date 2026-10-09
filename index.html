@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>FORM3LA — Rezerwacja wizyty</title>
+  <meta name="description" content="Zarezerwuj wizytę w FORM3LA Barbershop: wybierz usługę, dzień i godzinę. Bez zakładania konta.">
+  <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FORM3LA">
+  <meta property="og:title" content="FORM3LA — zarezerwuj wizytę">
+  <meta property="og:description" content="Wolne terminy na żywo. Rezerwacja w trzech dotknięciach.">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..800&display=swap">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<!--
+THESIS: Rezerwacja u barbera jako natywna aplikacja iOS w przeglądarce — usługa, dzień, godzina, karnet w Wallet-stylu. Odrzuca landing z hero i formularzem kontaktowym oraz marketplace'owe listy Booksy.
+OWN-WORLD: Tła grupowane #F2F2F7 / czarne w trybie ciemnym, listy inset, materiał pasków z rozmyciem, jedna sosnowa zieleń (#0E7A5E) tylko dla wyboru, głównej akcji i karnetu. SF Pro (Inter poza Apple), cyfry tabelaryczne.
+STORY: Klient widzi salon i status otwarcia, wybiera usługę z ceną i czasem, przewija pasek dni, stuka godzinę, podaje imię i telefon w arkuszu, dostaje karnet i dodaje go do kalendarza.
+FIRST VIEWPORT: Znak FORM3LA 40px z zieloną „3”, status „Otwarte do 19:00”, dwa przyciski-pigułki (Dojazd, Zadzwoń), a pod nimi lista usług z ceną po prawej — pierwsza usługa widoczna bez przewijania.
+FORM: iOS Calendar + Wallet (przypięte w briefie; roll pominięty — brief wygrywa), seed dcd28fcd. Podniesienie od odrzuconego „monochrome product canon”: kolor marki użyty najwyżej 4 razy na ekran.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+-->
+  <div class="app" id="app">
+    <main class="stack" id="stack" aria-live="polite"></main>
+  </div>
+  <div id="overlays"></div>
+  <div id="island" class="island" role="status" aria-live="polite"></div>
+  <noscript><p style="padding:24px;font-family:system-ui">Do rezerwacji potrzebny jest JavaScript.</p></noscript>
+  <script type="module" src="js/client.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  </script>
+</body>
+</html>

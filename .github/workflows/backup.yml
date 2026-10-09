@@ -1,0 +1,46 @@
+# Nocna, ZASZYFROWANA kopia bazy Supabase do gałęzi `backups` tego repozytorium.
+# Działa dopiero po dodaniu sekretów (Settings → Secrets and variables → Actions):
+#   SUPABASE_URL, SUPABASE_SERVICE_KEY (service_role), BACKUP_PASSPHRASE (długie hasło — zapisz je w menedżerze haseł!)
+# Bez sekretów zadanie kończy się od razu i niczego nie robi.
+# Odszyfrowanie: openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in plik.json.enc -out plik.json
+name: Kopia nocna
+on:
+  schedule:
+    - cron: '17 1 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sprawdź konfigurację
+        id: cfg
+        env:
+          URL: ${{ secrets.SUPABASE_URL }}
+        run: |
+          if [ -z "$URL" ]; then echo "Brak sekretów — tryb demo, pomijam."; echo "skip=1" >> $GITHUB_OUTPUT; fi
+      - uses: actions/checkout@v4
+        if: steps.cfg.outputs.skip != '1'
+        with:
+          fetch-depth: 0
+      - name: Pobierz i zaszyfruj
+        if: steps.cfg.outputs.skip != '1'
+        env:
+          URL: ${{ secrets.SUPABASE_URL }}
+          KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          PASS: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          for t in bookings app_config config_history audit_log; do
+            curl -sf "$URL/rest/v1/$t?select=*" -H "apikey: $KEY" -H "Authorization: Bearer $KEY" > "out/$t.json"
+          done
+          test -s out/bookings.json
+          STAMP=$(date -u +%Y-%m-%d)
+          tar -czf - -C out . | openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -pass env:PASS -out "form3la-$STAMP.tar.gz.enc"
+          git config user.name "form3la-backup"; git config user.email "backup@users.noreply.github.com"
+          git fetch origin backups || true
+          if git show-ref --verify --quiet refs/remotes/origin/backups; then git checkout -B backups origin/backups; else git checkout --orphan backups; git rm -rf --cached . >/dev/null 2>&1 || true; fi
+          mkdir -p kopie && mv "form3la-$STAMP.tar.gz.enc" kopie/
+          git add kopie && git commit -m "Kopia $STAMP" && git push origin backups
