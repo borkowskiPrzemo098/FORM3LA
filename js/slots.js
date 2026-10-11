@@ -39,7 +39,7 @@ export function slotProblem(cfg, day, start, duration, busy, opts = {}) {
     if (plan.breaks.some(([b1, b2]) => overlaps(start, end, b1, b2))) return 'Koliduje z przerwą.';
   }
   const buf = s.bufferMin || 0;
-  const clash = busy.find((b) => b.id !== opts.excludeId && overlaps(start, end, b.start - buf, b.end + buf));
+  const clash = busy.find((b) => (opts.excludeId == null || b.id !== opts.excludeId) && overlaps(start, end, b.start - buf, b.end + buf));
   if (clash) return 'Ten termin jest już zajęty.';
   const at = parseYmd(day);
   at.setMinutes(start);
